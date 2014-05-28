@@ -1,0 +1,12 @@
+{
+  "name": "express-coffee-test",
+  "dependencies": {
+    "express": "*",
+    "colog": "*",
+    "jade": "*"
+  },
+  "scripts": {
+    "start": "node lib/app.js",
+    "build": "cake build"
+  }
+}
