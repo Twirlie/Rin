@@ -7,7 +7,12 @@ exports.index = (req, res)->
 # load a video
 exports.load = (req, res)->
   console.log 'loaded vid.load'
-  yukari.video req.params, (data)->
+  arg = req.params.id
+  yukari.mediaById arg, (data)->
     if data?
-      colog.success 'we have data!'
-      # res.render 'video', { title: data.title }
+      if data == 'failure'
+        res.render 'error', {title: 'error', error: 'no data', info: 'server returned no data'}
+      else
+        colog.success 'we have data!'
+        colog.error JSON.stringify(data)
+        res.render 'video', { title: data.title, data: data }

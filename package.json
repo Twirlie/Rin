@@ -3,7 +3,14 @@
   "dependencies": {
     "express": "*",
     "colog": "*",
-    "jade": "*"
+    "jade": "*",
+    "coffee-script": "*",
+    "less": "*"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-coffee": "0.10.1",
+    "grunt-contrib-less": "0.11.1"
   },
   "scripts": {
     "start": "node lib/app.js",
