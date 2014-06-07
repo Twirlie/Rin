@@ -15,9 +15,6 @@ yukari.connect cfg.connect, ->
 
 yukari.on 'error', (err) ->
   colog.error err
-  if clientCallback is not null
-    clientCallback err
-    finish err
 
 yukari.on 'close', ->
   colog.warning 'connection closed'
@@ -28,7 +25,7 @@ yukari.on 'data', (reply) ->
   callback = clientCallback
   colog.info reply
 
-  if data.callType is 'mediaById'
+  if data.callType is 'mediaById' and callback
     if data.result is 'ok'
       data.resource.meta = data.meta
       callback data.resource # run the callback
@@ -38,8 +35,8 @@ yukari.on 'data', (reply) ->
       finish 'Data is nomatch'
   else
     colog.warning 'currentCallType: ' + currentCallType
-    callback 'System error occurred.'
     finish 'System error occurred.'
+    if callback then callback 'System error occurred.'
 
 
 exports.mediaById = (arg, callback) ->
