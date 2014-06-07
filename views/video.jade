@@ -4,12 +4,22 @@ block content
   <script type="text/javascript">var herp = !{JSON.stringify(data)};</script>
   H1= data.title
   iframe(width="853" height="480" src="//www.youtube.com/embed/"+ data.id + "" frameborder="0" allowfullscreen)
-  div(class="col-md-6")
-    p= 'mediaId: ' + data.mediaId
-    p= 'type: ' + data.type
-  div(class="col-md-6")
-  p= 'flag: ' + data.flag
-  p= 'id: ' + data.id
+  div
+    div(class="col-md-6")
+      p= 'mediaId: ' + data.mediaId
+      p= 'type: ' + data.type
+    div(class="col-md-6")
+      p= 'flag: ' + data.flag
+      p= 'id: ' + data.id
+  div(class="btn-group")
+    if data.mediaId > 1
+      a(href=data.mediaId - 1 class="btn btn-default") previous video
+    else 
+      a(class="btn btn-default disabled") previous video
+    if !data.meta.isLastRow
+      a(href=data.mediaId + 1 class="btn btn-default") next video
+    else
+      a(class="btn btn-default disabled") next video
   script(src="https://raw.github.com/jprichardson/string.js/master/lib/string.min.js")
   script(src="/color-checker.js")
     
