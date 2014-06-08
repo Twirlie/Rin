@@ -1,6 +1,9 @@
 extends layout
 
 block content
-  H1= title
-  h2= error
-  p= info
+  div(class="panel panel-danger")
+    div(class="panel-heading")
+      h1 Error
+    div(class="panel-body")
+      p An error occured
+      strong= info
