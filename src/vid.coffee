@@ -8,9 +8,14 @@ exports.index = (req, res) ->
 exports.load = (req, res) ->
   console.log 'loaded vid.load'
   arg = req.params.id
-  yukari.mediaById arg, (data) ->
-    if data?
-      if typeof data is 'string'
-        res.render 'error', {title: 'an error occured', error: 'Error', info: data}
-      else
-        res.render 'video', { title: data.title, data: data }
+  yukari.mediaById arg, (videoData) ->
+    data = {}
+    if videoData?
+      if typeof videoData is 'string' # if we get an error
+          res.render 'error', {title: 'an error occured', error: 'Error', info: videoData}
+      else # if we get actual data
+        colog.log 'we have data'
+        data.video = videoData
+        yukari.usersByMediaId arg, (userData) ->
+          data.users = userData
+          res.render 'video', { title: data.title, data: data }

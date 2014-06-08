@@ -7,6 +7,7 @@ connect = require './connect'
 site = require './site'
 vid = require './vid'
 user = require './user'
+
 # configure express
 app = express()
 app.set 'view engine', 'jade'

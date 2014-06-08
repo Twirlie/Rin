@@ -7,7 +7,6 @@ connectionStatus = false
 exports.connectionStatus = connectionStatus
 currentCallType = null
 clientCallback = null
-
 yukari = new net.Socket()
 yukari.connect cfg.connect, ->
   colog.headerSuccess 'connected to ' + cfg.connect.host + ' on port ' + cfg.connect.port
@@ -22,31 +21,47 @@ yukari.on 'close', ->
 
 yukari.on 'data', (reply) ->
   data = JSON.parse reply # parse returned data
-  callback = clientCallback
   colog.info reply
 
-  if data.callType is 'mediaById' and callback
+  if currentCallType is 'mediaById' # return data for mediaById
+    callback = clientCallback
     if data.result is 'ok'
+      colog.info 'MediaById: ok'
       data.resource.meta = data.meta
       callback data.resource # run the callback
-      finish()
     else
       callback 'Data is nomatch' # epic fail
-      finish 'Data is nomatch'
+  else if currentCallType is 'usersByMediaId' #return data for usersByMediaId
+    callback = clientCallback
+    if data.result is 'ok'
+      colog.info 'usersByMediaId: ok'
+      callback data.resource 
+    else 
+      log.warning 'usersByMediaId: nomatch'
+      callback 'Data is nomatch'
   else
     colog.warning 'currentCallType: ' + currentCallType
-    finish 'System error occurred.'
     if callback then callback 'System error occurred.'
 
 
 exports.mediaById = (arg, callback) ->
-  currentCallType = 'mediaById'
   colog.warning 'media by Id'
   clientCallback = callback
-  yukari.write '{"callType": "mediaById", "args": {"mediaId": ' + arg + '}}\r\n', -> # ask yukari for data
-    colog.info 'query video ' + arg 
-   
-finish = (err) ->
-  currentCallType = null
-  clientCallback = null
-  if err then colog.error 'data transfer error: ' + err else colog.success 'done!'
+  changeCallType 'mediaById', () ->
+    yukari.write '{"callType": "mediaById", "args": {"mediaId": ' + arg + '}}\r\n', -> # ask yukari for data
+      colog.info 'query video ' + arg 
+
+exports.usersByMediaId = (arg, callback) ->
+  colog.warning 'users by media Id'
+  clientCallback = callback
+  changeCallType 'usersByMediaId', () ->
+    yukari.write '{"callType": "usersByMediaId", "args": {"mediaId": ' + arg + '}}\r\n', ->
+      colog.info 'get users by mediaId ' + arg
+
+changeCallType = (calltype, callback) ->
+  if currentCallType != calltype
+    colog.info 'changing call type to ' + calltype
+    currentCallType = calltype
+    colog.info 'current call type: ' + currentCallType + typeof currentCallType
+    callback()
+  else callback()

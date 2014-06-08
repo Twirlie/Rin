@@ -2,22 +2,29 @@ extends layout
 
 block content
   <script type="text/javascript">var herp = !{JSON.stringify(data)};</script>
-  H1= data.title
-  iframe(width="853" height="480" src="//www.youtube.com/embed/"+ data.id + "" frameborder="0" allowfullscreen)
-  div
-    div(class="col-md-6")
-      p= 'mediaId: ' + data.mediaId
-      p= 'type: ' + data.type
-    div(class="col-md-6")
-      p= 'flag: ' + data.flag
-      p= 'id: ' + data.id
+  div(class="video-container")
+    iframe(width="853" height="480" src="//www.youtube.com/embed/"+ data.video.id + "" frameborder="0" allowfullscreen)
+  div(class="panel panel-default")
+    H1= data.video.title
+    if data.video.flag === 1
+      H3(class="alert alert-danger") This media has been flagged.
+  div(class="panel panel-default")
+    div(class="panel-heading") 
+      H4 Users who have added this.
+    div(class="panel-body")
+      ul(class="list-group")
+        each user in data.users.queuedUsers
+          if user === data.users.addedUser
+            li(class="list-group-item")= 'Originally added by: ' + user
+          else 
+            li(class="list-group-item")= user
   div(class="btn-group")
-    if data.mediaId > 1
-      a(href=data.mediaId - 1 class="btn btn-default") previous video
+    if data.video.mediaId > 1
+      a(href=data.video.mediaId - 1 class="btn btn-default") previous video
     else 
       a(class="btn btn-default disabled") previous video
-    if !data.meta.isLastRow
-      a(href=data.mediaId + 1 class="btn btn-default") next video
+    if !data.video.meta.isLastRow
+      a(href=data.video.mediaId + 1 class="btn btn-default") next video
     else
       a(class="btn btn-default disabled") next video
   script(src="https://raw.github.com/jprichardson/string.js/master/lib/string.min.js")

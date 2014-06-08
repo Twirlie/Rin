@@ -1,4 +1,4 @@
-var data = herp;
+var data = herp.video;
 var vocaloids = [
   {'name': ['Hatsune Miku', '初音ミク'], color: 'DeepSkyBlue'},
   {'name': ['Gumi', 'GUMI', 'Megpoid'], color: 'LimeGreen'},
